@@ -7,6 +7,7 @@
         public string FileName { get; set; }
         public string Revision { get; set; }
         public int Version { get; set; }
+        public string Config { get; set; }
         public byte[] Blob { get; set; }
         public string DocType { get; set; }
 
