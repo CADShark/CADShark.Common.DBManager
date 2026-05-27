@@ -1,93 +1,81 @@
-﻿using Newtonsoft.Json;
+using CADShark.Common.DBManager.Http;
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CADShark.Common.DBManager;
 
-public class OpenVaultApi
+public class OpenVaultApi : IDisposable
 {
     private readonly HttpClient _client;
+    private readonly IHttpContentSerializer _serializer;
+    private readonly bool _ownsClient;
 
     public OpenVaultApi()
+        : this(new OpenVaultApiOptions())
     {
-        var handler = new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) => true
-        };
+    }
 
-        _client = new HttpClient(handler)
-        {
-            BaseAddress = new Uri("https://192.168.1.109:443/")
-        };
+    public OpenVaultApi(OpenVaultApiOptions options)
+        : this(CreateClient(options), new JsonHttpContentSerializer(), true)
+    {
+    }
+
+    public OpenVaultApi(HttpClient client)
+        : this(client, new JsonHttpContentSerializer(), false)
+    {
+    }
+
+    internal OpenVaultApi(HttpClient client, IHttpContentSerializer serializer, bool ownsClient)
+    {
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+        _ownsClient = ownsClient;
     }
 
     public async Task<int> CreateObjectAsync(int objectType)
     {
-        const string url = "api/objects";
-
         var request = new CreateObjectRequest
         {
             ObjectType = objectType
         };
 
-        var json = JsonConvert.SerializeObject(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync(url, content);
-        response.EnsureSuccessStatusCode();
-
-        var resultJson = await response.Content.ReadAsStringAsync();
-
-        var result = JsonConvert.DeserializeObject<ApiResponse<CreateObjectResponse>>(resultJson);
+        var result = await PostAsync<CreateObjectRequest, ApiResponse<CreateObjectResponse>>(
+            OpenVaultEndpoint.Objects,
+            request);
 
         return result.Data.ObjectId;
     }
 
-    // ========= SEARCH OBJECTS =========
     public async Task<int[]> SearchObjectsAsync(SearchRequest request)
     {
-        const string url = "api/objects/search";
-
-        var json = JsonConvert.SerializeObject(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync(url, content);
-        response.EnsureSuccessStatusCode();
-
-        var resultJson = await response.Content.ReadAsStringAsync();
-
-        var result = JsonConvert.DeserializeObject<ApiResponse<SearchResponse>>(resultJson);
+        var result = await PostAsync<SearchRequest, ApiResponse<SearchResponse>>(
+            OpenVaultEndpoint.ObjectSearch,
+            request);
 
         return result?.Data?.ObjectIds ?? [];
     }
 
-    // ========= CREATE ATTRIBUTE =========
-    public async Task<string> AddAttribute(int objectId, int attributeId, string value)
+    public Task<string> AddAttribute(int objectId, int attributeId, string value)
     {
-        var url = $"api/objects/{objectId}/attributes";
-
         var request = new AttributeRequest
         {
             AttributeId = attributeId,
-
             StringValue = value
         };
 
-        var json = JsonConvert.SerializeObject(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync(url, content);
-        response.EnsureSuccessStatusCode();
-
-        return await response.Content.ReadAsStringAsync();
+        return PostForStringAsync(OpenVaultEndpoint.ObjectAttributes(objectId), request);
     }
 
-    public async Task<string> WritteBlob(string fileName, byte[] fileBody, int objectLinkId, int attributeId,
+    public Task<string> WriteBlobAsync(
+        string fileName,
+        byte[] fileBody,
+        int objectLinkId,
+        int attributeId,
         int linkType)
     {
-        var url = "api/storage";
+        if (fileBody == null)
+            throw new ArgumentNullException(nameof(fileBody));
 
         var request = new StorageRequest
         {
@@ -98,9 +86,53 @@ public class OpenVaultApi
             LinkType = linkType
         };
 
-        var json = JsonConvert.SerializeObject(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        return PostForStringAsync(OpenVaultEndpoint.Storage, request);
+    }
 
+    public Task<string> WritteBlob(
+        string fileName,
+        byte[] fileBody,
+        int objectLinkId,
+        int attributeId,
+        int linkType)
+    {
+        return WriteBlobAsync(fileName, fileBody, objectLinkId, attributeId, linkType);
+    }
+
+    public void Dispose()
+    {
+        if (_ownsClient)
+            _client.Dispose();
+    }
+
+    private static HttpClient CreateClient(OpenVaultApiOptions options)
+    {
+        if (options == null)
+            throw new ArgumentNullException(nameof(options));
+
+        var handler = new HttpClientHandler();
+
+        if (options.IgnoreServerCertificateErrors)
+            handler.ServerCertificateCustomValidationCallback = (message, certificate, chain, errors) => true;
+
+        return new HttpClient(handler)
+        {
+            BaseAddress = options.BaseAddress
+        };
+    }
+
+    private async Task<TResponse> PostAsync<TRequest, TResponse>(string url, TRequest request)
+    {
+        var content = _serializer.CreateContent(request);
+        var response = await _client.PostAsync(url, content);
+        response.EnsureSuccessStatusCode();
+
+        return await _serializer.ReadAsync<TResponse>(response.Content);
+    }
+
+    private async Task<string> PostForStringAsync<TRequest>(string url, TRequest request)
+    {
+        var content = _serializer.CreateContent(request);
         var response = await _client.PostAsync(url, content);
         response.EnsureSuccessStatusCode();
 

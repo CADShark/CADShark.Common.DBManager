@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace CADShark.Common.DBManager;
 
@@ -6,10 +6,12 @@ public static class BlobReader
 {
     public static byte[] ReadAllBytes(string filePath)
     {
-        byte[] fileBytes = null;
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new IOException("File path is empty.");
 
-        if (File.Exists(filePath))
-            fileBytes = File.ReadAllBytes(filePath);
-        return fileBytes;
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("File was not found.", filePath);
+
+        return File.ReadAllBytes(filePath);
     }
 }

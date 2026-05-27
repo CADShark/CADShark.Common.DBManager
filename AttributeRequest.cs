@@ -1,7 +1,9 @@
-﻿namespace CADShark.Common.DBManager;
+using Newtonsoft.Json;
+
+namespace CADShark.Common.DBManager;
 
 public class AttributeRequest
 {
-    public int AttributeId { get; set; }
-    public string StringValue { get; set; }
+    [JsonProperty("attributeId")] public int AttributeId { get; set; }
+    [JsonProperty("value")] public string StringValue { get; set; }
 }

@@ -1,10 +1,12 @@
-﻿namespace CADShark.Common.DBManager;
+using Newtonsoft.Json;
+
+namespace CADShark.Common.DBManager;
 
 public class StorageRequest
 {
-    public string FileName { get; set; }
-    public string FileBody { get; set; } // base64!
-    public int ObjectLinkId { get; set; }
-    public int AttributeId { get; set; }
-    public int LinkType { get; set; }
+    [JsonProperty("fileName")] public string FileName { get; set; }
+    [JsonProperty("fileBody")] public string FileBody { get; set; }
+    [JsonProperty("objectLinkId")] public int ObjectLinkId { get; set; }
+    [JsonProperty("attributeId")] public int AttributeId { get; set; }
+    [JsonProperty("linkType")] public int LinkType { get; set; }
 }
