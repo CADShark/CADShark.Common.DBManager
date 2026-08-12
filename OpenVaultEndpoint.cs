@@ -1,5 +1,5 @@
-namespace CADShark.Common.DBManager;
-
+namespace OpenVault.Client
+{
 internal static class OpenVaultEndpoint
 {
     public const string Objects = "api/objects";
@@ -10,4 +10,5 @@ internal static class OpenVaultEndpoint
     {
         return $"api/objects/{objectId}/attributes";
     }
+}
 }

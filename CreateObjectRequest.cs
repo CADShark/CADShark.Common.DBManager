@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace CADShark.Common.DBManager;
-
-public class CreateObjectRequest
+namespace OpenVault.Client
 {
-    [JsonProperty("objectType")] public int ObjectType { get; set; }
+    public class CreateObjectRequest
+    {
+        [JsonProperty("objectType")] public int ObjectType { get; set; }
+    }
 }

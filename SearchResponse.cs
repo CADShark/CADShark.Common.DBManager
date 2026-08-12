@@ -1,8 +1,9 @@
 using Newtonsoft.Json;
 
-namespace CADShark.Common.DBManager;
-
+namespace OpenVault.Client
+{
 public class SearchResponse
 {
     [JsonProperty("objectIds")] public int[] ObjectIds { get; set; }
+}
 }

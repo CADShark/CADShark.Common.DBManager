@@ -1,1 +1,1 @@
-# CADShark.Common.DBManager
+# namespace OpenVault.Client

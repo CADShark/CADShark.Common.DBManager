@@ -1,9 +1,10 @@
 using Newtonsoft.Json;
 
-namespace CADShark.Common.DBManager;
-
-public class AttributeResponse
+namespace OpenVault.Client
 {
-    [JsonProperty("attributeId")] public int AttributeId { get; set; }
-    [JsonProperty("value")] public string Value { get; set; }
+    public class AttributeResponse
+    {
+        [JsonProperty("attributeId")] public int AttributeId { get; set; }
+        [JsonProperty("value")] public string Value { get; set; }
+    }
 }
