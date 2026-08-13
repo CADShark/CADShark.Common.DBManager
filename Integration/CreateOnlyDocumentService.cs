@@ -47,6 +47,7 @@ namespace OpenManage.Client.Integration
                         : request.WorkspaceRoot);
                 var workspaceDocument = workspace.Resolve(request.Document.FullPath);
                 var objectType = GetObjectType(request.Document.DocumentKind);
+                var fileBody = File.ReadAllBytes(request.Document.FullPath);
                 var attributes = _mapper.Map(
                     request.Document.Properties,
                     request.PropertyMappings,
@@ -72,7 +73,6 @@ namespace OpenManage.Client.Integration
                     result.AddedAttributeCount++;
                 }
 
-                var fileBody = File.ReadAllBytes(request.Document.FullPath);
                 var file = await _client.Files
                     .AddAsync(
                         new AddFileRequest
