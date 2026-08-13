@@ -17,13 +17,15 @@ The console stub:
 3. reads document properties and then active-configuration properties;
 4. validates that the file is below the workspace root;
 5. maps `Обозначение` to attribute `9`, `Наименование` to attribute `10`, and adds relative path attribute `1038`;
-6. prints the prepared data without sending it to OpenVault.
+6. creates the OpenVault object (`1296` for a part, `1361` for an assembly);
+7. adds the mapped attributes;
+8. uploads the main file through `POST /api/Storage` with attribute `1002` and link type `4`.
 
 Run on a Windows workstation with SOLIDWORKS open:
 
 ```text
-OpenManage.SolidWorks.ConsoleStub.exe
-OpenManage.SolidWorks.ConsoleStub.exe "E:\\AlternativeVault\\"
+OpenManage.SolidWorks.ConsoleStub.exe https://openvault.example/
+OpenManage.SolidWorks.ConsoleStub.exe https://openvault.example/ "E:\\AlternativeVault\\"
 ```
 
-The default workspace is `D:\\Vault\\`. File upload will be enabled after the OpenVault Storage API uses `long ObjectLinkId` consistently.
+The default workspace is `D:\\Vault\\`. The wrapper keeps `ObjectLinkId` as `long`, but rejects values above `Int32.MaxValue` while the current server Storage contract still uses `int`.
