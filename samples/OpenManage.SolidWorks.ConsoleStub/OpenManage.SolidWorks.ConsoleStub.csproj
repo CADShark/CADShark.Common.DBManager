@@ -11,5 +11,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <ProjectReference Include="../../CADShark.OpenManage.Client.csproj" />
+    <ProjectReference Include="../../integrations/SolidWorks/OpenManage.SolidWorks.Adapter/OpenManage.SolidWorks.Adapter.csproj" />
   </ItemGroup>
 </Project>
