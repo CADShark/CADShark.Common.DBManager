@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <Reference Include="System.Net.Http" />
     <ProjectReference Include="../../CADShark.OpenManage.Client.csproj" />
   </ItemGroup>
 </Project>
