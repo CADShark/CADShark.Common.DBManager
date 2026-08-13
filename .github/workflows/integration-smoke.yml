@@ -2,15 +2,6 @@ name: OpenVault integration smoke test
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-    paths:
-      - .github/workflows/integration-smoke.yml
-      - tests/OpenManage.Client.Integration/**
-      - Relations/**
-      - OpenManageClient.cs
-      - OpenVaultEndpoint.cs
 
 permissions:
   contents: read
