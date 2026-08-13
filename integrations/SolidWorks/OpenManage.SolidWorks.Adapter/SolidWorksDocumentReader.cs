@@ -1,6 +1,7 @@
 using OpenManage.Client.Integration.Models;
 using System;
 using System.Collections;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,10 +11,6 @@ namespace OpenManage.SolidWorks.Adapter
     public sealed class SolidWorksDocumentReader : ISolidWorksDocumentReader
     {
         private const string SolidWorksProgId = "SldWorks.Application";
-        private const int PartDocumentType = 1;
-        private const int AssemblyDocumentType = 2;
-        private const int DrawingDocumentType = 3;
-
         public Task<EngineeringDocumentInfo> GetActiveDocumentAsync(
             CancellationToken cancellationToken)
         {
@@ -34,7 +31,7 @@ namespace OpenManage.SolidWorks.Adapter
                     throw new SolidWorksAdapterException(
                         "The active SOLIDWORKS document must be saved before it can be added to OpenVault.");
 
-                var documentKind = MapDocumentKind((int)document.GetType());
+                var documentKind = MapDocumentKind(fullPath);
                 var configurationName = GetActiveConfigurationName(document, documentKind);
                 var result = new EngineeringDocumentInfo
                 {
@@ -71,15 +68,15 @@ namespace OpenManage.SolidWorks.Adapter
             }
         }
 
-        private static EngineeringDocumentKind MapDocumentKind(int documentType)
+        private static EngineeringDocumentKind MapDocumentKind(string fullPath)
         {
-            switch (documentType)
+            switch (Path.GetExtension(fullPath).ToUpperInvariant())
             {
-                case PartDocumentType:
+                case ".SLDPRT":
                     return EngineeringDocumentKind.Part;
-                case AssemblyDocumentType:
+                case ".SLDASM":
                     return EngineeringDocumentKind.Assembly;
-                case DrawingDocumentType:
+                case ".SLDDRW":
                     return EngineeringDocumentKind.Drawing;
                 default:
                     return EngineeringDocumentKind.Unknown;
