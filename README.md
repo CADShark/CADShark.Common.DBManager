@@ -49,6 +49,41 @@ var attribute = await client.Objects.AddAttributeAsync(
     cancellationToken);
 ```
 
+## Read and update an object
+
+```csharp
+var objectDetails = await client.Objects.GetByIdAsync(
+    objectId,
+    cancellationToken);
+
+var attributeById = await client.Objects.GetAttributeByIdAsync(
+    objectId,
+    attributeId: 2001,
+    cancellationToken);
+
+var attributeByName = await client.Objects.GetAttributeByNameAsync(
+    objectId,
+    attributeName: "Designation",
+    cancellationToken);
+
+var updated = await client.Objects.UpdateAttributeAsync(
+    objectId,
+    attributeId: 2001,
+    value: "A-002",
+    cancellationToken);
+```
+
+The current OpenVault API exposes individual attribute lookup by ID or name. It does not expose an endpoint that returns every attribute value for an object.
+
+Attribute values can be removed independently from their metadata definition:
+
+```csharp
+await client.Objects.DeleteAttributeAsync(
+    objectId,
+    attributeId: 2001,
+    cancellationToken);
+```
+
 ## Search
 
 ```csharp
@@ -72,6 +107,34 @@ var objectIds = await client.Search.SearchAsync(
 ```
 
 Object IDs are represented as `long`.
+
+## End-to-end object flow
+
+```csharp
+var created = await client.Objects.CreateAsync(objectType, cancellationToken);
+
+try
+{
+    await client.Objects.AddAttributeAsync(
+        created.ObjectId,
+        attributeId,
+        "SDK-SMOKE-001",
+        cancellationToken);
+
+    var foundIds = await client.Search.SearchAsync(searchRequest, cancellationToken);
+    var readBack = await client.Objects.GetByIdAsync(created.ObjectId, cancellationToken);
+    var readAttribute = await client.Objects.GetAttributeByIdAsync(
+        created.ObjectId,
+        attributeId,
+        cancellationToken);
+}
+finally
+{
+    await client.Objects.DeleteAsync(created.ObjectId, cancellationToken);
+}
+```
+
+Use only a test object type and test metadata IDs when running this flow against a shared server.
 
 ## Read hierarchy, navigator and composition
 

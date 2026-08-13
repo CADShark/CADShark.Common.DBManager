@@ -16,6 +16,16 @@ namespace OpenManage.Client.Http
             return $"api/objects/{objectId}/attributes";
         }
 
+        public static string ObjectAttribute(long objectId, int attributeId)
+        {
+            return $"api/objects/{objectId}/attributes/{attributeId}";
+        }
+
+        public static string ObjectAttributeByName(long objectId, string attributeName)
+        {
+            return $"api/objects/{objectId}/attributes/by-name/{System.Uri.EscapeDataString(attributeName)}";
+        }
+
         public static string ObjectNavigator(int objectType)
         {
             return $"api/objects/navigator/{objectType}";
