@@ -46,7 +46,7 @@ namespace OpenManage.Client.Tests
                 Assert.Contains("\"attributeId\":1002", body);
                 Assert.Contains("\"linkType\":4", body);
                 Assert.Equal(25, result.FileId);
-                Assert.Equal(248, result.ObjectLinkId);
+                Assert.Equal(248L, result.ObjectLinkId);
             }
         }
 
