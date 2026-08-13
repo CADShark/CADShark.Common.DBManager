@@ -217,3 +217,10 @@ dotnet restore
 dotnet build
 dotnet test
 ```
+
+## Documentation
+
+- [OpenVault Client API](docs/OPENVAULT_CLIENT_API.md) — public interfaces, method-to-endpoint mapping, error handling, CAD/ECAD integration contracts and usage examples.
+- [Architecture requirements](docs/ARCHITECTURE_REQUIREMENTS.md) — project boundaries, approved integration flow and implementation constraints.
+
+Interactive HTTP documentation such as Scalar belongs to the OpenVault Web API project and should consume its OpenAPI document. The client reference above documents the C# facade and integration abstractions that OpenAPI cannot describe.
