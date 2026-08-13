@@ -1,19 +1,19 @@
 ---
 title: OpenVault Architecture Requirements
-document_version: 0.2
+document_version: 0.3
 status: draft
 last_updated: 2026-08-13
 scope:
   - OpenVault API
   - OpenVault.Client
-  - SOLIDWORKS integrator
+  - CAD/ECAD integrations
 ---
 
 # Архитектурные требования OpenVault
 
 Этот документ является единым источником архитектурных требований для:
 
-- интегратора SOLIDWORKS;
+- интеграторов SOLIDWORKS, Autodesk Inventor, Altium Designer и EPLAN;
 - библиотеки `OpenVault.Client`;
 - серверного проекта OpenVault API.
 
@@ -320,16 +320,104 @@ GET /api/storage/info?fileName=Part1.sldprt
 5. создать запись `OM_STORAGE` с `F_ATTRIBUTE_ID = 1002` и `F_LINKTYPE = 4`;
 6. связать файл с ID созданной версии объекта.
 
-## 9. Источники
+## 9. Архитектура интеграций CAD/ECAD
+
+### ADR-006. Общая схема интеграции
+
+Каждая CAD/ECAD-система ДОЛЖНА иметь отдельный набор библиотек. Общие сценарии интеграции, нейтральные модели, механизм mapping и HTTP-клиент размещаются в `OpenManage.Client`.
+
+```mermaid
+flowchart TD
+    H["Add-in или Console Host"] --> A["CAD/ECAD Adapter"]
+    H --> C["OpenManage.Client"]
+    A --> C
+    C --> API["OpenVault API"]
+```
+
+Типы API конкретной инженерной системы, включая COM и Interop, НЕ ДОЛЖНЫ выходить за границу её Adapter-проекта.
+
+### ADR-007. Структура solution
+
+```text
+CADShark.OpenManage.Client.sln
+├── CADShark.OpenManage.Client.csproj
+│   ├── Http
+│   ├── Objects
+│   ├── Relations
+│   ├── Search
+│   ├── Integration
+│   │   ├── IEngineeringDocumentSource
+│   │   └── Models
+│   └── Mapping
+├── integrations
+│   ├── SolidWorks
+│   │   ├── OpenManage.SolidWorks.Adapter
+│   │   └── OpenManage.SolidWorks.AddIn          (позже)
+│   ├── Inventor                                 (позже)
+│   ├── Altium                                   (позже)
+│   └── Eplan                                    (позже)
+└── samples
+    └── OpenManage.SolidWorks.ConsoleStub
+```
+
+| Компонент | Target Framework | Ответственность |
+|---|---|---|
+| `OpenManage.Client` | `netstandard2.0` | OpenVault API, DTO, общие сценарии Integration, нейтральные инженерные модели и общий механизм Mapping. |
+| `OpenManage.SolidWorks.Adapter` | `net48` | SOLIDWORKS API/Interop, активный документ, активная конфигурация и преобразование в нейтральную модель. |
+| `OpenManage.SolidWorks.ConsoleStub` | `net48` | Временный host для запуска и проверки сценариев без Add-in UI. |
+| `OpenManage.SolidWorks.AddIn` | `net48` | Будущие команды, UI, регистрация и жизненный цикл Add-in. |
+| Adapter/Host других CAD/ECAD | определяется SDK системы | Изолированная работа с Autodesk Inventor, Altium Designer или EPLAN по тем же границам. |
+
+### ADR-008. Нейтральный контракт документа
+
+Adapter ДОЛЖЕН возвращать `EngineeringDocumentInfo` через `IEngineeringDocumentSource`.
+
+Нейтральная модель содержит:
+
+- полный локальный путь;
+- тип инженерного документа;
+- имя активной конфигурации, когда система поддерживает конфигурации;
+- словарь свойств без типов CAD/ECAD SDK.
+
+`OpenManage.Client` НЕ ДОЛЖЕН:
+
+- подключать SOLIDWORKS, Inventor, Altium или EPLAN SDK;
+- запускать или управлять CAD/ECAD-приложением;
+- знать особенности активного документа конкретной системы;
+- содержать названия конкретных свойств как жёстко заданные правила.
+
+### ADR-009. Mapping
+
+Общий механизм преобразования `PropertyName → AttributeId` находится в `OpenManage.Client.Mapping`.
+
+Конкретный набор правил принадлежит интеграции или её конфигурации. Пример для SOLIDWORKS:
+
+```text
+Обозначение  → AttributeId 9
+Наименование → AttributeId 10
+```
+
+Атрибут относительного пути `1038` добавляется общим сценарием Integration после проверки рабочей области и не зависит от названия свойства CAD/ECAD.
+
+### Правила зависимостей
+
+1. Host/Add-in МОЖЕТ зависеть от своего Adapter и `OpenManage.Client`.
+2. Adapter МОЖЕТ зависеть от SDK своей CAD/ECAD-системы и `OpenManage.Client`.
+3. `OpenManage.Client` НЕ ДОЛЖЕН зависеть от Adapter, Host, Add-in или CAD/ECAD SDK.
+4. Adapter одной инженерной системы НЕ ДОЛЖЕН зависеть от Adapter другой системы.
+5. OpenVault API принимает только нейтральные DTO и ничего не знает о CAD/ECAD SDK.
+6. Консольная заглушка НЕ ДОЛЖНА становиться постоянным местом хранения SOLIDWORKS Interop-логики.
+
+## 10. Источники
 
 - Требования проекта OpenVault, согласованные в рабочем обсуждении.
 - *IPS. Руководство программиста*, раздел 4.4.10 «Файлы и двоичные данные (ftFile, ftBlob, ftShortBlob)».
 - *IPS. Руководство администратора*: файловые атрибуты, файловые хранилища и контроль уникальности.
 - *IPS. Руководство пользователя*: импорт и работа с файлами документов.
 
-## 10. История изменений
+## 11. История изменений
 
 | Версия | Дата | Изменения |
 |---|---|---|
 | `0.1` | 2026-08-13 | Зафиксированы рабочая область, первоначальный процесс поиска файла и структура `OM_STORAGE`. |
-| `0.2` | 2026-08-13 | Markdown принят как основной формат; атрибут `1038` назначен относительному пути; `F_OBJECTLINK_ID` определён как ID версии; подтверждена регистронезависимая серверная уникальность имени. |
+| `0.2` | 2026-08-13 | Markdown принят как основной формат; атрибут `1038` назначен относительному пути; `F_OBJECTLINK_ID` определён как ID версии; подтверждена регистронезависимая серверная уникальность имени. |\n| `0.3` | 2026-08-13 | Утверждена расширяемая архитектура CAD/ECAD-интеграций, структура solution, нейтральный контракт документа, границы Adapter/Host и размещение Mapping. |
