@@ -1,3 +1,4 @@
+using OpenManage.Client.Files;
 using OpenManage.Client.Http;
 using OpenManage.Client.Objects;
 using OpenManage.Client.Relations;
@@ -34,6 +35,7 @@ namespace OpenManage.Client
             Objects = new ObjectsClient(transport);
             Relations = new RelationsClient(transport);
             Search = new SearchClient(transport);
+            Files = new FilesClient(transport);
         }
 
         public IObjectsClient Objects { get; }
@@ -41,6 +43,8 @@ namespace OpenManage.Client
         public IRelationsClient Relations { get; }
 
         public ISearchClient Search { get; }
+
+        public IFilesClient Files { get; }
 
         public void Dispose()
         {
