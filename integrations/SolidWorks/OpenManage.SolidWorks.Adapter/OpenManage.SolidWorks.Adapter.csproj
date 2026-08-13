@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <Reference Include="Microsoft.CSharp" />
     <ProjectReference Include="../../../CADShark.OpenManage.Client.csproj" />
   </ItemGroup>
 </Project>
