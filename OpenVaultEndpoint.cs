@@ -6,6 +6,7 @@ namespace OpenManage.Client.Http
         public const string ObjectSearch = "api/objects/search";
         public const string ObjectHierarchy = "api/objects/hierarchy";
         public const string ObjectRelations = "api/object-relations";
+        public const string Storage = "api/storage";
 
         public static string Object(long objectId)
         {
