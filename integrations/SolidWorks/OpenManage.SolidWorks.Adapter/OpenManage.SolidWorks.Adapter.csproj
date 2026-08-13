@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>OpenManage.SolidWorks.Adapter</AssemblyName>
+    <RootNamespace>OpenManage.SolidWorks.Adapter</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <ProjectReference Include="../../../CADShark.OpenManage.Client.csproj" />
+  </ItemGroup>
+</Project>
