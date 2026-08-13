@@ -1,9 +1,14 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace OpenVault.Client
+namespace OpenManage.Client.Search.Models
 {
-public class SearchRequest
-{
-    [JsonProperty("filters")] public Filter[] Filters { get; set; }
-}
+    public sealed class SearchObjectsRequest
+    {
+        [JsonProperty("filters")]
+        public List<AttributeFilter> Filters { get; set; }
+
+        [JsonProperty("versionId")]
+        public int? VersionId { get; set; }
+    }
 }
