@@ -2,8 +2,28 @@
 
 This directory contains only SOLIDWORKS-specific components.
 
-- `OpenManage.SolidWorks.Adapter` reads the active SOLIDWORKS document through SOLIDWORKS Interop and converts it to the neutral `EngineeringDocumentInfo` model.
+- `OpenManage.SolidWorks.Adapter` connects to the running SOLIDWORKS COM application, reads the active document and converts it to the neutral `EngineeringDocumentInfo` model.
 - A future `OpenManage.SolidWorks.AddIn` project will contain commands, UI and add-in registration.
 - The console stub in `samples/OpenManage.SolidWorks.ConsoleStub` is a temporary host for integration development.
 
-SOLIDWORKS Interop types must not cross the adapter boundary or be added to `OpenManage.Client`.
+SOLIDWORKS Interop types must not cross the adapter boundary or be added to `OpenManage.Client`. The current adapter uses COM late binding so the solution can build without installing SOLIDWORKS or copying vendor Interop assemblies into the repository.
+
+## Current CreateOnly preparation scenario
+
+The console stub:
+
+1. connects to an already running SOLIDWORKS instance;
+2. reads the saved active document;
+3. reads document properties and then active-configuration properties;
+4. validates that the file is below the workspace root;
+5. maps `Обозначение` to attribute `9`, `Наименование` to attribute `10`, and adds relative path attribute `1038`;
+6. prints the prepared data without sending it to OpenVault.
+
+Run on a Windows workstation with SOLIDWORKS open:
+
+```text
+OpenManage.SolidWorks.ConsoleStub.exe
+OpenManage.SolidWorks.ConsoleStub.exe "E:\\AlternativeVault\\"
+```
+
+The default workspace is `D:\\Vault\\`. File upload will be enabled after the OpenVault Storage API uses `long ObjectLinkId` consistently.
