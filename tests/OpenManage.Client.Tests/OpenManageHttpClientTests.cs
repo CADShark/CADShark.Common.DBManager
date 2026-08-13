@@ -79,6 +79,40 @@ namespace OpenManage.Client.Tests
         }
 
         [Fact]
+        public async Task GetAsync_Throws_Network_Exception_When_Backend_Is_Unavailable()
+        {
+            var httpClient = new HttpClient(
+                new ThrowingHandler(new HttpRequestException("offline")))
+            {
+                BaseAddress = new Uri("https://example.test/")
+            };
+            var transport = new OpenManageHttpClient(
+                httpClient,
+                new JsonHttpContentSerializer());
+
+            var exception = await Assert.ThrowsAsync<OpenManageApiException>(
+                () => transport.GetAsync<ObjectResponse>("api/objects/1"));
+
+            Assert.Equal(OpenManageErrorKind.Network, exception.ErrorKind);
+            Assert.IsType<HttpRequestException>(exception.InnerException);
+        }
+
+        [Fact]
+        public async Task GetAsync_Propagates_Requested_Cancellation()
+        {
+            var transport = CreateTransport(
+                HttpStatusCode.OK,
+                "{\"success\":true,\"data\":{},\"error\":null}");
+            var cancellation = new CancellationTokenSource();
+            cancellation.Cancel();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => transport.GetAsync<ObjectResponse>(
+                    "api/objects/1",
+                    cancellation.Token));
+        }
+
+        [Fact]
         public async Task Search_Request_Uses_Public_ObjectTypeIds_And_Server_Json_Name()
         {
             string requestBody = null;
@@ -159,6 +193,23 @@ namespace OpenManage.Client.Tests
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 return _handler(request);
+            }
+        }
+
+        private sealed class ThrowingHandler : HttpMessageHandler
+        {
+            private readonly Exception _exception;
+
+            public ThrowingHandler(Exception exception)
+            {
+                _exception = exception;
+            }
+
+            protected override Task<HttpResponseMessage> SendAsync(
+                HttpRequestMessage request,
+                CancellationToken cancellationToken)
+            {
+                throw _exception;
             }
         }
     }
