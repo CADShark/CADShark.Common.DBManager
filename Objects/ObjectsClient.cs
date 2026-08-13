@@ -1,6 +1,7 @@
 using OpenManage.Client.Http;
 using OpenManage.Client.Objects.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,6 +57,44 @@ namespace OpenManage.Client.Objects
                 OpenVaultEndpoint.ObjectAttributes(objectId),
                 request,
                 cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<ObjectTypeHierarchyRecord>> GetHierarchyAsync(
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var records = await _httpClient
+                .GetAsync<List<ObjectTypeHierarchyRecord>>(
+                    OpenVaultEndpoint.ObjectHierarchy,
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            return records;
+        }
+
+        public async Task<IReadOnlyList<ObjectNavigatorRecord>> GetNavigatorRecordsAsync(
+            int objectType,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var records = await _httpClient
+                .GetAsync<List<ObjectNavigatorRecord>>(
+                    OpenVaultEndpoint.ObjectNavigator(objectType),
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            return records;
+        }
+
+        public async Task<IReadOnlyList<ObjectCompositionRecord>> GetCompositionAsync(
+            long objectId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var records = await _httpClient
+                .GetAsync<List<ObjectCompositionRecord>>(
+                    OpenVaultEndpoint.ObjectComposition(objectId),
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            return records;
         }
     }
 }
