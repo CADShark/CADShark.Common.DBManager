@@ -150,32 +150,31 @@ Wrapper МОЖЕТ содержать только типизированный 
 - Документ находится внутри рабочей области.
 - На первом этапе обрабатывается только активная конфигурация.
 
-### 4.2. Последовательность
+### 4.2. Последовательность текущего этапа CreateOnly
 
 ```mermaid
 sequenceDiagram
     actor User as Пользователь
     participant SW as Интегратор SOLIDWORKS
-    participant Client as OpenVault.Client
+    participant Client as OpenManage.Client
     participant API as OpenVault API
-    participant DB as OM_STORAGE
 
     User->>SW: Добавить активный документ
-    SW->>SW: Получить и проверить полный путь
-    SW->>SW: Вычислить имя и относительный путь
-    SW->>Client: Запросить файл по имени
-    Client->>API: GetInfo(fileName)
-    API->>DB: Поиск по F_FILENAME
-    DB-->>API: Метаданные или отсутствие записи
-    API-->>Client: FileInfo / NotFound
-    alt Файл найден
-        Client->>API: GET /api/Objects/{F_OBJECTLINK_ID}
-        API-->>Client: Версия объекта
-    else Файл не найден
-        Client-->>SW: FileNotFound
-    end
+    SW->>SW: Прочитать документ и активную конфигурацию
+    SW->>SW: Проверить рабочую область
+    SW->>SW: Вычислить относительный путь
+    SW->>Client: Создать объект нужного типа
+    Client->>API: Создать объект
+    API-->>Client: Object ID и Version ID
+    SW->>Client: Добавить атрибуты 9, 10, 1038 и другие
+    Client->>API: Записать атрибуты объекта
+    SW->>Client: Передать основной файл
+    Client->>API: Загрузить файл для версии объекта
+    API-->>Client: Результат добавления
+    Client-->>SW: Created или Failed
 ```
 
+Поиск файла до добавления на этом этапе НЕ выполняется.
 ### 4.3. Получение и проверка пути
 
 #### SW-REQ-001
