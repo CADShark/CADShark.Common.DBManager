@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <Compile Remove="tests/**/*.cs" />
+    <Compile Remove="integrations/**/*.cs" />
+    <Compile Remove="samples/**/*.cs" />
   </ItemGroup>
 
 </Project>
