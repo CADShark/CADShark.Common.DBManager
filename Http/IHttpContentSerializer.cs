@@ -1,6 +1,4 @@
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace OpenManage.Client.Http
 {
@@ -8,8 +6,6 @@ namespace OpenManage.Client.Http
     {
         HttpContent CreateContent<T>(T value);
 
-        Task<T> ReadAsync<T>(
-            HttpContent content,
-            CancellationToken cancellationToken);
+        T Deserialize<T>(string content);
     }
 }
