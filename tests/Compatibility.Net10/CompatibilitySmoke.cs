@@ -1,4 +1,7 @@
 using OpenManage.Client;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Compatibility.Net10;
 
