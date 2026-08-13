@@ -40,11 +40,11 @@ namespace OpenManage.Client.Tests
 
                 Assert.Equal(HttpMethod.Post, captured.Method);
                 Assert.Equal("/api/storage", captured.RequestUri.PathAndQuery);
-                Assert.Contains("\"fileName\":\"Part1.sldprt\"", body);
-                Assert.Contains("\"fileBody\":\"AQID\"", body);
-                Assert.Contains("\"objectLinkId\":248", body);
-                Assert.Contains("\"attributeId\":1002", body);
-                Assert.Contains("\"linkType\":4", body);
+                Assert.Contains("\"FileName\":\"Part1.sldprt\"", body);
+                Assert.Contains("\"FileBody\":\"AQID\"", body);
+                Assert.Contains("\"ObjectLinkId\":248", body);
+                Assert.Contains("\"AttributeId\":1002", body);
+                Assert.Contains("\"LinkType\":4", body);
                 Assert.Equal(25, result.FileId);
                 Assert.Equal(248L, result.ObjectLinkId);
             }
