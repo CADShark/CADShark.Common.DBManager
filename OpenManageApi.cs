@@ -6,28 +6,23 @@ using System.Threading.Tasks;
 namespace OpenVault.Client
 {
 
-    public class OpenVaultApi : IDisposable
+    public class OpenManageApi : IDisposable
     {
         private readonly HttpClient _client;
         private readonly IHttpContentSerializer _serializer;
         private readonly bool _ownsClient;
 
-        public OpenVaultApi()
-            : this(new OpenVaultApiOptions())
-        {
-        }
-
-        public OpenVaultApi(OpenVaultApiOptions options)
+        public OpenManageApi(OpenManageClientOptions options)
             : this(CreateClient(options), new JsonHttpContentSerializer(), true)
         {
         }
 
-        public OpenVaultApi(HttpClient client)
+        public OpenManageApi(HttpClient client)
             : this(client, new JsonHttpContentSerializer(), false)
         {
         }
 
-        internal OpenVaultApi(HttpClient client, IHttpContentSerializer serializer, bool ownsClient)
+        internal OpenManageApi(HttpClient client, IHttpContentSerializer serializer, bool ownsClient)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
@@ -106,10 +101,16 @@ namespace OpenVault.Client
                 _client.Dispose();
         }
 
-        private static HttpClient CreateClient(OpenVaultApiOptions options)
+        private static HttpClient CreateClient(OpenManageClientOptions options)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
+
+            if (options.BaseAddress == null)
+                throw new ArgumentException(
+                    "OpenManageClientOptions.BaseAddress must be set by the host application; " +
+                    "the SDK does not provide a default OpenMANAGE server address.",
+                    nameof(options));
 
             var handler = new HttpClientHandler();
 
