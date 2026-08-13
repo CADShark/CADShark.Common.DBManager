@@ -41,7 +41,10 @@ namespace OpenManage.Client.Integration
 
             try
             {
-                var workspace = new WindowsWorkspacePathService(request.WorkspaceRoot);
+                var workspace = new WindowsWorkspacePathService(
+                    string.IsNullOrWhiteSpace(request.WorkspaceRoot)
+                        ? WindowsWorkspacePathService.DefaultWorkspaceRoot
+                        : request.WorkspaceRoot);
                 var workspaceDocument = workspace.Resolve(request.Document.FullPath);
                 var objectType = GetObjectType(request.Document.DocumentKind);
                 var attributes = _mapper.Map(
