@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace OpenVault.Client
+namespace OpenManage.Client.Objects.Models
 {
-    public class CreateObjectResponse
+    public sealed class ObjectResponse
     {
-        [JsonProperty("objectId")] public int ObjectId { get; set; }
+        [JsonProperty("objectId")]
+        public long ObjectId { get; set; }
 
-        [JsonProperty("versionId")] public int VersionId { get; set; }
+        [JsonProperty("versionId")]
+        public int VersionId { get; set; }
 
-        [JsonProperty("objectType")] public int ObjectType { get; set; }
+        [JsonProperty("objectType")]
+        public int ObjectType { get; set; }
     }
 }
