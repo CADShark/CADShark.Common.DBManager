@@ -23,6 +23,9 @@ namespace OpenManage.SolidWorks.ConsoleStub
                 return 4;
             }
 
+            if (!apiAddress.AbsoluteUri.EndsWith("/", StringComparison.Ordinal))
+                apiAddress = new Uri(apiAddress.AbsoluteUri + "/");
+
             var workspaceRoot = args.Length > 1
                 ? args[1]
                 : WindowsWorkspacePathService.DefaultWorkspaceRoot;
