@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenManage.Client", "CADSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenManage.Client.Tests", "tests\OpenManage.Client.Tests\OpenManage.Client.Tests.csproj", "{B67A9245-57C8-4F76-8755-C66A81908520}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compatibility.Net48", "tests\Compatibility.Net48\Compatibility.Net48.csproj", "{F735440E-D9C4-4B1E-B9F4-9D0392F040E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compatibility.Net10", "tests\Compatibility.Net10\Compatibility.Net10.csproj", "{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{B67A9245-57C8-4F76-8755-C66A81908520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B67A9245-57C8-4F76-8755-C66A81908520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B67A9245-57C8-4F76-8755-C66A81908520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F735440E-D9C4-4B1E-B9F4-9D0392F040E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F735440E-D9C4-4B1E-B9F4-9D0392F040E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F735440E-D9C4-4B1E-B9F4-9D0392F040E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F735440E-D9C4-4B1E-B9F4-9D0392F040E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
