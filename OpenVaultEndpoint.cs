@@ -5,6 +5,7 @@ namespace OpenManage.Client.Http
         public const string Objects = "api/objects";
         public const string ObjectSearch = "api/objects/search";
         public const string ObjectHierarchy = "api/objects/hierarchy";
+        public const string ObjectRelations = "api/object-relations";
 
         public static string Object(long objectId)
         {
@@ -34,6 +35,16 @@ namespace OpenManage.Client.Http
         public static string ObjectComposition(long objectId)
         {
             return $"api/objects/{objectId}/composition";
+        }
+
+        public static string ObjectRelation(long relationId)
+        {
+            return $"api/object-relations/{relationId}";
+        }
+
+        public static string ObjectRelationMove(long relationId)
+        {
+            return $"api/object-relations/{relationId}/move";
         }
     }
 }

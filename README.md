@@ -158,6 +158,38 @@ The corresponding models are:
 
 Icons returned by the API are deserialized from JSON base64 values into `byte[]`. Composition relation and parent identifiers are nullable because the root record can have no relation or parent.
 
+
+## Create a SolidWorks composition
+
+Object relations are exposed through `client.Relations`. A relation is attached to a physical parent version and points to the logical child object. OpenVault resolves the child version when the composition is read.
+
+```csharp
+var relation = await client.Relations.CreateAsync(
+    parentObjectId: assembly.ObjectId,
+    childObjectId: part.ObjectId,
+    relationType: 1014,
+    cancellationToken);
+
+var composition = await client.Objects.GetCompositionAsync(
+    assembly.ObjectId,
+    cancellationToken);
+```
+
+Relations can be moved or removed without deleting the related objects:
+
+```csharp
+await client.Relations.MoveAsync(
+    relation.RelationId,
+    newParentObjectId,
+    cancellationToken);
+
+await client.Relations.DeleteAsync(
+    relation.RelationId,
+    cancellationToken);
+```
+
+The server rejects self-references, duplicate child relations under one parent version, and direct or indirect composition cycles.
+
 ## Error handling
 
 HTTP errors, backend business errors, network failures and invalid responses are exposed through `OpenManageApiException`:

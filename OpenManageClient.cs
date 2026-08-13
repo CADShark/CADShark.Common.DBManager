@@ -1,5 +1,6 @@
 using OpenManage.Client.Http;
 using OpenManage.Client.Objects;
+using OpenManage.Client.Relations;
 using OpenManage.Client.Search;
 using System;
 using System.Net.Http;
@@ -31,10 +32,13 @@ namespace OpenManage.Client
                 new JsonHttpContentSerializer());
 
             Objects = new ObjectsClient(transport);
+            Relations = new RelationsClient(transport);
             Search = new SearchClient(transport);
         }
 
         public IObjectsClient Objects { get; }
+
+        public IRelationsClient Relations { get; }
 
         public ISearchClient Search { get; }
 
