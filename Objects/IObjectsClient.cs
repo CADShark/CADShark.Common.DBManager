@@ -1,4 +1,5 @@
 using OpenManage.Client.Objects.Models;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,17 @@ namespace OpenManage.Client.Objects
             long objectId,
             int attributeId,
             string value,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IReadOnlyList<ObjectTypeHierarchyRecord>> GetHierarchyAsync(
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IReadOnlyList<ObjectNavigatorRecord>> GetNavigatorRecordsAsync(
+            int objectType,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IReadOnlyList<ObjectCompositionRecord>> GetCompositionAsync(
+            long objectId,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }
