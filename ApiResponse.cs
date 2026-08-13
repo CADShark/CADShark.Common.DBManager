@@ -1,13 +1,25 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace OpenVault.Client
+namespace OpenManage.Client.Contracts
 {
-    public class ApiResponse<T>
+    public sealed class ApiResponse<T>
     {
-        [JsonProperty("success")] public bool Success { get; set; }
+        [JsonProperty("success")]
+        public bool Success { get; set; }
 
-        [JsonProperty("data")] public T Data { get; set; }
+        [JsonProperty("data")]
+        public T Data { get; set; }
 
-        [JsonProperty("error")] public string Error { get; set; }
+        [JsonProperty("error")]
+        public ApiError Error { get; set; }
+    }
+
+    public sealed class ApiError
+    {
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
     }
 }

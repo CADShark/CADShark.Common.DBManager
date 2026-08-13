@@ -1,9 +1,8 @@
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenVault.Client.Http
+namespace OpenManage.Client.Http
 {
     internal sealed class JsonHttpContentSerializer : IHttpContentSerializer
     {
@@ -15,10 +14,9 @@ namespace OpenVault.Client.Http
             return new StringContent(json, Encoding.UTF8, MediaType);
         }
 
-        public async Task<T> ReadAsync<T>(HttpContent content)
+        public T Deserialize<T>(string content)
         {
-            var json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(json);
+            return JsonConvert.DeserializeObject<T>(content);
         }
     }
 }

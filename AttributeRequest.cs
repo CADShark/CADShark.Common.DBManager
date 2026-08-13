@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
 
-namespace OpenVault.Client
+namespace OpenManage.Client.Objects.Models
 {
-    public class AttributeRequest
+    public sealed class AddAttributeRequest
     {
-        [JsonProperty("attributeId")] public int AttributeId { get; set; }
-        [JsonProperty("value")] public string StringValue { get; set; }
+        [JsonProperty("attributeId")]
+        public int AttributeId { get; set; }
+
+        [JsonProperty("stringValue")]
+        public string StringValue { get; set; }
     }
 }

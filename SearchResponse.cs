@@ -1,9 +1,11 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace OpenVault.Client
+namespace OpenManage.Client.Search.Models
 {
-public class SearchResponse
-{
-    [JsonProperty("objectIds")] public int[] ObjectIds { get; set; }
-}
+    internal sealed class SearchObjectsResponse
+    {
+        [JsonProperty("objectIds")]
+        public List<long> ObjectIds { get; set; }
+    }
 }
