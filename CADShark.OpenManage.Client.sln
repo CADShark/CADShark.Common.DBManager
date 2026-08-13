@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compatibility.Net48", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compatibility.Net10", "tests\Compatibility.Net10\Compatibility.Net10.csproj", "{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenManage.SolidWorks.ConsoleStub", "samples\OpenManage.SolidWorks.ConsoleStub\OpenManage.SolidWorks.ConsoleStub.csproj", "{E40B2A10-8321-4A58-AE21-F48F47D93B39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29A1713E-9EB1-4B57-A4B3-A8B7E1098DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E40B2A10-8321-4A58-AE21-F48F47D93B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E40B2A10-8321-4A58-AE21-F48F47D93B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E40B2A10-8321-4A58-AE21-F48F47D93B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E40B2A10-8321-4A58-AE21-F48F47D93B39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
