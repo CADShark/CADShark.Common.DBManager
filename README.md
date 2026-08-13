@@ -73,6 +73,28 @@ var objectIds = await client.Search.SearchAsync(
 
 Object IDs are represented as `long`.
 
+## Read hierarchy, navigator and composition
+
+```csharp
+var hierarchy = await client.Objects.GetHierarchyAsync(cancellationToken);
+
+var navigatorRecords = await client.Objects.GetNavigatorRecordsAsync(
+    objectType,
+    cancellationToken);
+
+var composition = await client.Objects.GetCompositionAsync(
+    objectId,
+    cancellationToken);
+```
+
+The corresponding models are:
+
+- `ObjectTypeHierarchyRecord`
+- `ObjectNavigatorRecord`
+- `ObjectCompositionRecord`
+
+Icons returned by the API are deserialized from JSON base64 values into `byte[]`. Composition relation and parent identifiers are nullable because the root record can have no relation or parent.
+
 ## Error handling
 
 HTTP errors, backend business errors, network failures and invalid responses are exposed through `OpenManageApiException`:
